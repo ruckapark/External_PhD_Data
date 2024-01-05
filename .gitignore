@@ -1,0 +1,68 @@
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environment
+venv/
+env/
+*.env
+
+# Ignore generated files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore common editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.swm
+*.bak
+*~
+
+# Exclude common data files
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.db
+*.sql
+*.json
+*.xml
+
+# Exclude common image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.ico
+*.svg
+*.webp
+
+# Exclude other binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Exclude log files
+*.log
+
+# Exclude backup files
+*.bak
+*.backup
+
+# Exclude temporary files
+*.tmp
+*.temp
+*.swp
+
+# Exclude any other file types or specific files
+# filename.ext
