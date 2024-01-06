@@ -62,13 +62,14 @@ def plot_groupedbarplot(df):
     sns.set(style='whitegrid')
     df_seaborn = df.reset_index().melt(id_vars='index', var_name='Chemical', value_name='Value')
     
-    plt.figure(figsize=(14, 7))
-    sns.barplot(x='Chemical', y='Value', hue='index', data=df_seaborn, palette=dummy_palette)
-    plt.title('CMP relative to median at the influent (INF) and effluent (EFF)')
-    plt.xlabel('Chemical')
-    plt.ylabel('Measured CMP to median ratio')
-    plt.yscale('log')
-    plt.xticks(rotation=30,fontsize = 15)
+    fig = plt.figure(figsize=(16, 8))
+    axe = fig.add_axes([0.1,0.1,0.8,0.8])
+    sns.barplot(x='Chemical', y='Value', hue='index', ax = axe, data=df_seaborn, palette=dummy_palette)
+    axe.set_title('Percentile of weighted average concentrations (WAC) relative to median WAC at the influent (INF) and effluent (EFF)',fontsize = 17)
+    axe.set_xlabel('Chemical',fontsize = 16)
+    axe.set_ylabel('Percentile WAC to median ratio',fontsize = 16)
+    axe.set_yscale('log')
+    axe.set_xticklabels(axe.get_xticklabels(),rotation=30,fontsize = 15)
     plt.show()
 
 if __name__ == '__main__':
