@@ -17,6 +17,8 @@ class DataProcessor:
         self.file_path = file_path
         self.data = pd.read_csv(self.file_path, index_col=None)
         self.concentration_columns = [col for col in self.data.columns if 'concentration' in col.lower()]
+        self.EFF_conc_cols = [col for col in self.concentration_columns if 'EFF' in col]
+        self.INF_conc_cols = [col for col in self.concentration_columns if 'INF' in col]
         self.group_columns = [col for col in self.data.columns if col not in self.concentration_columns]
         self.replace_nan_lq()
         self.INF,self.EFF = self.separate_dataframes()
@@ -41,16 +43,19 @@ class DataProcessor:
         
         if INF:
             df = self.INF.copy()
+            conc_cols = self.INF_conc_cols
         else:
             df = self.EFF.copy()
+            conc_cols = self.EFF_conc_cols
             
         if col_ind == None:
             cols = [col for col in df.columns if col not in self.group_columns]
         else:
-            cols = df.columns[col_ind]
+            cols = df.columns[col_ind].values.tolist()
             
+        #scale data by last column
+        df[conc_cols] = np.transpose(df[conc_cols].values.T/df[conc_cols].values.T[-1])
         data = df[cols].values.T
-        data = data/data[-1]
         df_ = pd.DataFrame(data,columns = df['Name'],index = cols)
             
         return df_
@@ -58,7 +63,7 @@ class DataProcessor:
 def plot_groupedbarplot(df):
     """ for influent or effluent"""
     custom_palette = ['#8c564b','#9467bd','#e377c2']
-    dummy_palette = ['#6f4539','#775e9b','#ad5b93','#ffffff','#a67d70','#b07fd1','#ff8db8']
+    dummy_palette = ['#6f4539','#775e9b','#ffffff','#a67d70','#b07fd1','#ff8db8']
     sns.set(style='whitegrid')
     df_seaborn = df.reset_index().melt(id_vars='index', var_name='Chemical', value_name='Value')
     
@@ -79,8 +84,8 @@ if __name__ == '__main__':
     RSDE = DataProcessor(file_path)
     
     #convert data to plotted form
-    df_INF = RSDE.df_substance_transpose(col_ind = [2,3,6])
-    df_EFF = RSDE.df_substance_transpose(INF = False,col_ind = [2,3,6])
+    df_INF = RSDE.df_substance_transpose(col_ind = [2,3])
+    df_EFF = RSDE.df_substance_transpose(INF = False,col_ind = [2,3])
     
     #dummy separation between influent and effluent
     df_dummy = pd.DataFrame(data = np.zeros((1,df_INF.shape[1])),columns = df_INF.columns,index = [' '])
